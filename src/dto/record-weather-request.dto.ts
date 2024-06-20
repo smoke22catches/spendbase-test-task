@@ -9,9 +9,4 @@ export class RecordWeatherRequestDto {
   @ApiProperty()
   @IsNumber()
   lon: number;
-
-  // @ApiProperty({ example: 'current' })
-  // @IsString()
-  // @IsIn(['current', 'minutely', 'hourly', 'daily', 'alerts'])
-  // part: 'current' | 'minutely' | 'hourly' | 'daily' | 'alerts';
 }

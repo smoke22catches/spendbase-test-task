@@ -1,7 +1,22 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiBody } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { RecordWeatherRequestDto } from './dto/record-weather-request.dto';
+import { GetWeatherResponseDto } from './dto/get-weather-response.dto';
+import { GetWeatherRequestDto } from './dto/get-weather-request.dto';
+import { WeatherResponseInterceptor } from './weather-response.interceptor';
 
 @Controller()
 export class AppController {
@@ -10,6 +25,7 @@ export class AppController {
   @ApiBody({
     type: RecordWeatherRequestDto,
   })
+  @ApiCreatedResponse()
   @Post()
   async recordWeatherForLocation(
     @Body() body: RecordWeatherRequestDto,
@@ -17,6 +33,14 @@ export class AppController {
     await this.appService.recordWeatherForLocation(body);
   }
 
+  @ApiOkResponse({
+    type: GetWeatherResponseDto,
+  })
+  @UseInterceptors(WeatherResponseInterceptor)
   @Get()
-  async getWeatherForLocation(): Promise<any> {}
+  async getWeatherForLocation(
+    @Query() query: GetWeatherRequestDto,
+  ): Promise<GetWeatherResponseDto> {
+    return this.appService.getWeatherForLocation(query);
+  }
 }
