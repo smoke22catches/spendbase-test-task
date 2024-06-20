@@ -1,0 +1,37 @@
+version: '3'
+
+networks:
+  spendbase-test-task-network:
+    driver: bridge
+
+services:
+  spendbase-test-task-app:
+    container_name: spendbase-test-task-app
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+    restart: always
+    networks:
+      - spendbase-test-task-network
+
+  spendbase-test-task-db:
+    container_name: spendbase-test-task-db
+    image: postgres:16-alpine
+    env_file:
+      - docker.env
+    ports:
+      - '5432:5432'
+    restart: always
+    networks:
+      - spendbase-test-task-network
+
+  spendbase-test-task-adminer:
+    container_name: spendbase-test-task-adminer
+    image: adminer
+    ports:
+      - '8080:8080'
+    restart: always
+    networks:
+      - spendbase-test-task-network
